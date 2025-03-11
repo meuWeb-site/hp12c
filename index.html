@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HP 12C Clone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .calculator {
+            width: 300px;
+            background: #d4af37;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        .display {
+            width: 93%;
+            height: 50px;
+            background: black;
+            color: green;
+            text-align: right;
+            padding: 10px;
+            font-size: 1.5em;
+            border-radius: 5px;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px;
+            font-size: 1em;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            background: #333;
+            color: white;
+        }
+        button:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button onclick="addToDisplay('7')">7</button>
+            <button onclick="addToDisplay('8')">8</button>
+            <button onclick="addToDisplay('9')">9</button>
+            <button onclick="performOperation('/')">/</button>
+            <button onclick="clearDisplay()">C</button>
+            <button onclick="addToDisplay('4')">4</button>
+            <button onclick="addToDisplay('5')">5</button>
+            <button onclick="addToDisplay('6')">6</button>
+            <button onclick="performOperation('*')">*</button>
+            <button onclick="clearEntry()">CE</button>
+            <button onclick="addToDisplay('1')">1</button>
+            <button onclick="addToDisplay('2')">2</button>
+            <button onclick="addToDisplay('3')">3</button>
+            <button onclick="performOperation('-')">-</button>
+            <button>FV</button>
+            <button onclick="addToDisplay('0')">0</button>
+            <button onclick="addToDisplay('.')">.</button>
+            <button>PV</button>
+            <button onclick="performOperation('+')">+</button>
+            <button onclick="pushToStack()">Enter</button>
+        </div>
+    </div>
+
+    <script>
+        let stack = [];
+        let currentValue = '';
+
+        function addToDisplay(value) {
+            currentValue += value;
+            updateDisplay();
+        }
+
+        function pushToStack() {
+            if (currentValue !== '') {
+                stack.push(parseFloat(currentValue));
+                currentValue = '';
+                updateDisplay();
+            }
+        }
+
+        function performOperation(operator) {
+            if (currentValue !== '') {
+                stack.push(parseFloat(currentValue));
+                currentValue = '';
+            }
+            if (stack.length < 2) return;
+            let b = stack.pop();
+            let a = stack.pop();
+            let result;
+
+            switch (operator) {
+                case '+': result = a + b; break;
+                case '-': result = a - b; break;
+                case '*': result = a * b; break;
+                case '/': result = b !== 0 ? a / b : 'Erro'; break;
+                default: return;
+            }
+
+            stack.push(result);
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById('display').innerText = currentValue || (stack.length > 0 ? stack[stack.length - 1] : '0');
+        }
+
+        function clearDisplay() {
+            stack = [];
+            currentValue = '';
+            updateDisplay();
+        }
+
+        function clearEntry() {
+            currentValue = '';
+            updateDisplay();
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (!isNaN(event.key) || event.key === '.') {
+                addToDisplay(event.key);
+            } else if (event.key === 'Enter') {
+                pushToStack();
+            } else if (['+', '-', '*', '/'].includes(event.key)) {
+                performOperation(event.key);
+            } else if (event.key === 'Backspace') {
+                clearEntry();
+            }
+        });
+    </script>
+</body>
+</html>
