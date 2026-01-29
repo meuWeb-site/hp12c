@@ -1,6 +1,6 @@
 <!-- 
 :heavy_plus_sign: Hp12c
-CM: Responsivo
+Update: Memória única
  -->
 
-Link: [Clique Aqui](https://hp12c.meuweb.site/)
+Link: [https://hp12c.meuweb.site/](https://hp12c.meuweb.site/)
